@@ -1,0 +1,1047 @@
+--// Efg2g Team | Universal Script
+--// Creator: Ravnyx
+--// Credits: Lauriyy
+
+local Players = game:GetService("Players")
+local Lighting = game:GetService("Lighting")
+local RunService = game:GetService("RunService")
+local TeleportService = game:GetService("TeleportService")
+local UserInputService = game:GetService("UserInputService")
+local VirtualUser = game:GetService("VirtualUser")
+local Workspace = game:GetService("Workspace")
+
+local Player = Players.LocalPlayer
+local PlayerGui = Player:WaitForChild("PlayerGui")
+
+--==================================================
+-- EFG2G INTRO
+--==================================================
+
+local Intro = Instance.new("ScreenGui")
+Intro.Name = "Efg2gTeam"
+Intro.ResetOnSpawn = false
+Intro.IgnoreGuiInset = true
+Intro.Parent = PlayerGui
+
+local Main = Instance.new("Frame")
+Main.Size = UDim2.fromOffset(420, 240)
+Main.Position = UDim2.fromScale(0.5, 0.5)
+Main.AnchorPoint = Vector2.new(0.5, 0.5)
+Main.BackgroundColor3 = Color3.fromRGB(18, 18, 24)
+Main.BorderSizePixel = 0
+Main.Parent = Intro
+
+local Corner = Instance.new("UICorner")
+Corner.CornerRadius = UDim.new(0, 14)
+Corner.Parent = Main
+
+local Stroke = Instance.new("UIStroke")
+Stroke.Color = Color3.fromRGB(120, 70, 255)
+Stroke.Thickness = 1.5
+Stroke.Parent = Main
+
+local Title = Instance.new("TextLabel")
+Title.Size = UDim2.new(1, -30, 0, 45)
+Title.Position = UDim2.fromOffset(15, 18)
+Title.BackgroundTransparency = 1
+Title.Text = "Efg2g Team"
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.Font = Enum.Font.GothamBold
+Title.TextSize = 26
+Title.Parent = Main
+
+local Description = Instance.new("TextLabel")
+Description.Size = UDim2.new(1, -45, 0, 80)
+Description.Position = UDim2.fromOffset(22, 65)
+Description.BackgroundTransparency = 1
+Description.Text = "Universal Script by Ravnyx"
+Description.TextColor3 = Color3.fromRGB(185, 185, 195)
+Description.Font = Enum.Font.Gotham
+Description.TextSize = 14
+Description.TextWrapped = true
+Description.Parent = Main
+
+local Agree = Instance.new("TextButton")
+Agree.Size = UDim2.fromOffset(180, 42)
+Agree.Position = UDim2.new(0.5, 0, 1, -25)
+Agree.AnchorPoint = Vector2.new(0.5, 1)
+Agree.BackgroundColor3 = Color3.fromRGB(105, 55, 220)
+Agree.Text = "I AGREE"
+Agree.TextColor3 = Color3.fromRGB(255, 255, 255)
+Agree.Font = Enum.Font.GothamBold
+Agree.TextSize = 15
+Agree.AutoButtonColor = true
+Agree.Parent = Main
+
+local AgreeCorner = Instance.new("UICorner")
+AgreeCorner.CornerRadius = UDim.new(0, 10)
+AgreeCorner.Parent = Agree
+
+local Accepted = false
+
+Agree.Activated:Connect(function()
+    if Accepted then
+        return
+    end
+
+    Accepted = true
+    Agree.Text = "Loading..."
+    Agree.Active = false
+
+    task.wait(0.25)
+    Intro:Destroy()
+end)
+
+repeat
+    task.wait()
+until Accepted
+
+--==================================================
+-- WINDUI
+--==================================================
+
+local Loaded, WindUI = pcall(function()
+    return loadstring(game:HttpGet(
+        "https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"
+    ))()
+end)
+
+if not Loaded or not WindUI then
+    warn("Efg2g Universal Script: WindUI failed to load.")
+    return
+end
+
+WindUI:SetNotificationLower(true)
+
+--==================================================
+-- WINDOW
+--==================================================
+
+local Window = WindUI:CreateWindow({
+    Title = "Universal Script",
+    Icon = "sparkles",
+    Author = "Ravnyx",
+    Folder = "UniversalScript",
+    Size = UDim2.fromOffset(580, 450),
+    Resizable = true,
+    SideBarWidth = 190,
+    HideSearchBar = false,
+    ScrollBarEnabled = true,
+    Acrylic = true
+})
+
+--==================================================
+-- TABS
+--==================================================
+
+local PlayerTab = Window:Tab({
+    Title = "Player",
+    Icon = "user"
+})
+
+local FlyTab = Window:Tab({
+    Title = "Fly",
+    Icon = "plane"
+})
+
+local VisualTab = Window:Tab({
+    Title = "Visuals",
+    Icon = "eye"
+})
+
+local WorldTab = Window:Tab({
+    Title = "World",
+    Icon = "globe"
+})
+
+local UtilityTab = Window:Tab({
+    Title = "Utilities",
+    Icon = "wrench"
+})
+
+local CreditsTab = Window:Tab({
+    Title = "Credits",
+    Icon = "heart"
+})
+
+--==================================================
+-- HELPERS
+--==================================================
+
+local function GetCharacter()
+    return Player.Character
+end
+
+local function GetHumanoid()
+    local Character = GetCharacter()
+
+    if not Character then
+        return nil
+    end
+
+    return Character:FindFirstChildOfClass("Humanoid")
+end
+
+local function GetRoot()
+    local Character = GetCharacter()
+
+    if not Character then
+        return nil
+    end
+
+    return Character:FindFirstChild("HumanoidRootPart")
+end
+
+--==================================================
+-- PLAYER TAB
+--==================================================
+
+PlayerTab:Section({
+    Title = "Movement"
+})
+
+PlayerTab:Slider({
+    Title = "Walk Speed",
+    Value = {
+        Min = 1,
+        Max = 250,
+        Default = 16
+    },
+    Step = 1,
+    Callback = function(Value)
+        local Humanoid = GetHumanoid()
+
+        if Humanoid then
+            Humanoid.WalkSpeed = Value
+        end
+    end
+})
+
+PlayerTab:Slider({
+    Title = "Jump Power",
+    Value = {
+        Min = 1,
+        Max = 250,
+        Default = 50
+    },
+    Step = 1,
+    Callback = function(Value)
+        local Humanoid = GetHumanoid()
+
+        if Humanoid then
+            Humanoid.UseJumpPower = true
+            Humanoid.JumpPower = Value
+        end
+    end
+})
+
+PlayerTab:Slider({
+    Title = "Hip Height",
+    Value = {
+        Min = 0,
+        Max = 20,
+        Default = 2
+    },
+    Step = 0.5,
+    Callback = function(Value)
+        local Humanoid = GetHumanoid()
+
+        if Humanoid then
+            Humanoid.HipHeight = Value
+        end
+    end
+})
+
+local InfiniteJump = false
+
+PlayerTab:Toggle({
+    Title = "Infinite Jump",
+    Desc = "Jump continuously while the jump button is pressed.",
+    Value = false,
+    Callback = function(Value)
+        InfiniteJump = Value
+    end
+})
+
+UserInputService.JumpRequest:Connect(function()
+    if not InfiniteJump then
+        return
+    end
+
+    local Humanoid = GetHumanoid()
+
+    if Humanoid then
+        Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+    end
+end)
+
+--==================================================
+-- NOCLIP
+--==================================================
+
+local Noclip = false
+
+PlayerTab:Toggle({
+    Title = "Noclip",
+    Desc = "Disable character collisions.",
+    Value = false,
+    Callback = function(Value)
+        Noclip = Value
+    end
+})
+
+RunService.Stepped:Connect(function()
+    if not Noclip then
+        return
+    end
+
+    local Character = GetCharacter()
+
+    if not Character then
+        return
+    end
+
+    for _, Object in ipairs(Character:GetDescendants()) do
+        if Object:IsA("BasePart") then
+            Object.CanCollide = false
+        end
+    end
+end)
+
+--==================================================
+-- SPRINT
+--==================================================
+
+local SprintEnabled = false
+local SprintSpeed = 40
+
+PlayerTab:Toggle({
+    Title = "Sprint",
+    Value = false,
+    Callback = function(Value)
+        SprintEnabled = Value
+
+        local Humanoid = GetHumanoid()
+
+        if Humanoid then
+            if Value then
+                Humanoid.WalkSpeed = SprintSpeed
+            else
+                Humanoid.WalkSpeed = 16
+            end
+        end
+    end
+})
+
+PlayerTab:Slider({
+    Title = "Sprint Speed",
+    Value = {
+        Min = 16,
+        Max = 150,
+        Default = 40
+    },
+    Step = 1,
+    Callback = function(Value)
+        SprintSpeed = Value
+
+        if SprintEnabled then
+            local Humanoid = GetHumanoid()
+
+            if Humanoid then
+                Humanoid.WalkSpeed = Value
+            end
+        end
+    end
+})
+
+--==================================================
+-- INVISIBILITY
+--==================================================
+
+local SavedTransparency = {}
+
+PlayerTab:Toggle({
+    Title = "Invisibility",
+    Value = false,
+    Callback = function(Value)
+        local Character = GetCharacter()
+
+        if not Character then
+            return
+        end
+
+        if Value then
+            SavedTransparency = {}
+
+            for _, Object in ipairs(Character:GetDescendants()) do
+                if Object:IsA("BasePart") or Object:IsA("Decal") then
+                    SavedTransparency[Object] = Object.Transparency
+                    Object.Transparency = 1
+                end
+            end
+        else
+            for Object, Transparency in pairs(SavedTransparency) do
+                if Object and Object.Parent then
+                    Object.Transparency = Transparency
+                end
+            end
+
+            SavedTransparency = {}
+        end
+    end
+})
+
+--==================================================
+-- CHARACTER
+--==================================================
+
+PlayerTab:Section({
+    Title = "Character"
+})
+
+PlayerTab:Button({
+    Title = "Sit",
+    Callback = function()
+        local Humanoid = GetHumanoid()
+
+        if Humanoid then
+            Humanoid.Sit = true
+        end
+    end
+})
+
+PlayerTab:Button({
+    Title = "Reset Character",
+    Callback = function()
+        local Humanoid = GetHumanoid()
+
+        if Humanoid then
+            Humanoid.Health = 0
+        end
+    end
+})
+
+PlayerTab:Button({
+    Title = "Respawn",
+    Callback = function()
+        Player:LoadCharacter()
+    end
+})
+
+--==================================================
+-- FLY
+--==================================================
+
+local FlyEnabled = false
+local FlySpeed = 60
+local FlyVelocity
+local FlyGyro
+local FlyConnection
+
+local function StopFly()
+    FlyEnabled = false
+
+    if FlyConnection then
+        FlyConnection:Disconnect()
+        FlyConnection = nil
+    end
+
+    if FlyVelocity then
+        FlyVelocity:Destroy()
+        FlyVelocity = nil
+    end
+
+    if FlyGyro then
+        FlyGyro:Destroy()
+        FlyGyro = nil
+    end
+end
+
+local function StartFly()
+    StopFly()
+
+    local Root = GetRoot()
+
+    if not Root then
+        return
+    end
+
+    FlyEnabled = true
+
+    FlyVelocity = Instance.new("BodyVelocity")
+    FlyVelocity.MaxForce = Vector3.new(
+        100000,
+        100000,
+        100000
+    )
+    FlyVelocity.Velocity = Vector3.zero
+    FlyVelocity.Parent = Root
+
+    FlyGyro = Instance.new("BodyGyro")
+    FlyGyro.MaxTorque = Vector3.new(
+        100000,
+        100000,
+        100000
+    )
+    FlyGyro.P = 90000
+    FlyGyro.Parent = Root
+
+    FlyConnection = RunService.RenderStepped:Connect(function()
+        if not FlyEnabled then
+            return
+        end
+
+        local CurrentRoot = GetRoot()
+        local Camera = Workspace.CurrentCamera
+
+        if not CurrentRoot or not Camera then
+            return
+        end
+
+        local Direction = Vector3.zero
+
+        if UserInputService:IsKeyDown(Enum.KeyCode.W) then
+            Direction += Camera.CFrame.LookVector
+        end
+
+        if UserInputService:IsKeyDown(Enum.KeyCode.S) then
+            Direction -= Camera.CFrame.LookVector
+        end
+
+        if UserInputService:IsKeyDown(Enum.KeyCode.A) then
+            Direction -= Camera.CFrame.RightVector
+        end
+
+        if UserInputService:IsKeyDown(Enum.KeyCode.D) then
+            Direction += Camera.CFrame.RightVector
+        end
+
+        if UserInputService:IsKeyDown(Enum.KeyCode.Space) then
+            Direction += Vector3.new(0, 1, 0)
+        end
+
+        if UserInputService:IsKeyDown(Enum.KeyCode.LeftControl) then
+            Direction -= Vector3.new(0, 1, 0)
+        end
+
+        if Direction.Magnitude > 0 then
+            Direction = Direction.Unit * FlySpeed
+        end
+
+        FlyVelocity.Velocity = Direction
+        FlyGyro.CFrame = Camera.CFrame
+    end)
+end
+
+FlyTab:Section({
+    Title = "Flight"
+})
+
+FlyTab:Toggle({
+    Title = "Fly",
+    Desc = "Desktop WASD + Space/Ctrl and mobile movement.",
+    Value = false,
+    Callback = function(Value)
+        if Value then
+            StartFly()
+        else
+            StopFly()
+        end
+    end
+})
+
+FlyTab:Slider({
+    Title = "Fly Speed",
+    Value = {
+        Min = 10,
+        Max = 200,
+        Default = 60
+    },
+    Step = 5,
+    Callback = function(Value)
+        FlySpeed = Value
+    end
+})
+
+FlyTab:Button({
+    Title = "Stop Flying",
+    Callback = function()
+        StopFly()
+    end
+})--==================================================
+-- MOBILE FLY MOVEMENT
+--==================================================
+
+RunService.RenderStepped:Connect(function()
+    if not FlyEnabled then
+        return
+    end
+
+    local Humanoid = GetHumanoid()
+
+    if not Humanoid or not FlyVelocity then
+        return
+    end
+
+    if Humanoid.MoveDirection.Magnitude > 0 then
+        local Direction = Humanoid.MoveDirection
+
+        local FlatDirection = Vector3.new(
+            Direction.X,
+            0,
+            Direction.Z
+        )
+
+        if FlatDirection.Magnitude > 0 then
+            FlyVelocity.Velocity =
+                FlatDirection.Unit * FlySpeed
+        end
+    end
+end)
+
+--==================================================
+-- SPIN / FLING MODE
+--==================================================
+
+local SpinEnabled = false
+local SpinSpeed = 80
+local SpinConnection
+
+local function StopSpin()
+    SpinEnabled = false
+
+    if SpinConnection then
+        SpinConnection:Disconnect()
+        SpinConnection = nil
+    end
+
+    local Root = GetRoot()
+
+    if Root then
+        Root.AssemblyAngularVelocity = Vector3.zero
+    end
+end
+
+local function StartSpin()
+    StopSpin()
+
+    local Root = GetRoot()
+
+    if not Root then
+        return
+    end
+
+    SpinEnabled = true
+
+    SpinConnection = RunService.RenderStepped:Connect(function()
+        if not SpinEnabled then
+            return
+        end
+
+        local CurrentRoot = GetRoot()
+
+        if CurrentRoot then
+            CurrentRoot.AssemblyAngularVelocity =
+                Vector3.new(0, SpinSpeed, 0)
+        end
+    end)
+end
+
+FlyTab:Section({
+    Title = "Spin Mode"
+})
+
+FlyTab:Toggle({
+    Title = "Spin / Fling Mode",
+    Desc = "Rapidly spins your character.",
+    Value = false,
+    Callback = function(Value)
+        if Value then
+            StartSpin()
+        else
+            StopSpin()
+        end
+    end
+})
+
+FlyTab:Slider({
+    Title = "Spin Speed",
+    Value = {
+        Min = 10,
+        Max = 500,
+        Default = 80
+    },
+    Step = 10,
+    Callback = function(Value)
+        SpinSpeed = Value
+    end
+})
+
+FlyTab:Button({
+    Title = "Stop Spinning",
+    Callback = function()
+        StopSpin()
+    end
+})
+
+--==================================================
+-- VISUALS
+--==================================================
+
+VisualTab:Section({
+    Title = "Lighting"
+})
+
+local OriginalBrightness = Lighting.Brightness
+local OriginalClockTime = Lighting.ClockTime
+local OriginalGlobalShadows = Lighting.GlobalShadows
+
+VisualTab:Toggle({
+    Title = "Fullbright",
+    Value = false,
+    Callback = function(Value)
+        if Value then
+            Lighting.Brightness = 3
+            Lighting.ClockTime = 14
+            Lighting.GlobalShadows = false
+        else
+            Lighting.Brightness = OriginalBrightness
+            Lighting.ClockTime = OriginalClockTime
+            Lighting.GlobalShadows = OriginalGlobalShadows
+        end
+    end
+})
+
+VisualTab:Toggle({
+    Title = "No Fog",
+    Value = false,
+    Callback = function(Value)
+        if Value then
+            Lighting.FogStart = 0
+            Lighting.FogEnd = 100000
+        else
+            Lighting.FogEnd = 1000
+        end
+    end
+})
+
+VisualTab:Toggle({
+    Title = "Remove Clouds",
+    Value = false,
+    Callback = function(Value)
+        for _, Object in ipairs(Lighting:GetChildren()) do
+            if Object:IsA("Clouds") then
+                Object.Enabled = not Value
+            end
+        end
+    end
+})
+
+VisualTab:Slider({
+    Title = "Camera FOV",
+    Value = {
+        Min = 40,
+        Max = 120,
+        Default = 70
+    },
+    Step = 1,
+    Callback = function(Value)
+        local Camera = Workspace.CurrentCamera
+
+        if Camera then
+            Camera.FieldOfView = Value
+        end
+    end
+})
+
+--==================================================
+-- ESP
+--==================================================
+
+local ESPEnabled = false
+local ESPObjects = {}
+
+local function RemoveESP(Target)
+    local Data = ESPObjects[Target]
+
+    if not Data then
+        return
+    end
+
+    if Data.Highlight then
+        Data.Highlight:Destroy()
+    end
+
+    if Data.Billboard then
+        Data.Billboard:Destroy()
+    end
+
+    ESPObjects[Target] = nil
+end
+
+local function AddESP(Target)
+    if Target == Player then
+        return
+    end
+
+    local Character = Target.Character
+
+    if not Character then
+        return
+    end
+
+    local Root = Character:FindFirstChild("HumanoidRootPart")
+
+    if not Root then
+        return
+    end
+
+    RemoveESP(Target)
+
+    local Highlight = Instance.new("Highlight")
+    Highlight.Name = "Efg2gESP"
+    Highlight.FillTransparency = 0.65
+    Highlight.OutlineTransparency = 0
+    Highlight.Adornee = Character
+    Highlight.Parent = Character
+
+    local Billboard = Instance.new("BillboardGui")
+    Billboard.Name = "Efg2gESPName"
+    Billboard.Adornee = Root
+    Billboard.Size = UDim2.fromOffset(180, 45)
+    Billboard.StudsOffset = Vector3.new(0, 3, 0)
+    Billboard.AlwaysOnTop = true
+    Billboard.Parent = Root
+
+    local Label = Instance.new("TextLabel")
+    Label.Size = UDim2.fromScale(1, 1)
+    Label.BackgroundTransparency = 1
+    Label.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Label.TextStrokeTransparency = 0
+    Label.Font = Enum.Font.GothamBold
+    Label.TextSize = 13
+    Label.Text = Target.DisplayName
+    Label.Parent = Billboard
+
+    ESPObjects[Target] = {
+        Highlight = Highlight,
+        Billboard = Billboard,
+        Label = Label
+    }
+end
+
+local function UpdateESP()
+    if not ESPEnabled then
+        return
+    end
+
+    for _, Target in ipairs(Players:GetPlayers()) do
+        if Target ~= Player then
+            AddESP(Target)
+        end
+    end
+end
+
+VisualTab:Section({
+    Title = "Player ESP"
+})
+
+VisualTab:Toggle({
+    Title = "ESP",
+    Desc = "Shows player names, distance and highlights.",
+    Value = false,
+    Callback = function(Value)
+        ESPEnabled = Value
+
+        if Value then
+            UpdateESP()
+        else
+            for Target in pairs(ESPObjects) do
+                RemoveESP(Target)
+            end
+        end
+    end
+})
+
+Players.PlayerAdded:Connect(function(Target)
+    Target.CharacterAdded:Connect(function()
+        if ESPEnabled then
+            task.wait(1)
+            AddESP(Target)
+        end
+    end)
+end)
+
+Players.PlayerRemoving:Connect(function(Target)
+    RemoveESP(Target)
+end)
+
+RunService.RenderStepped:Connect(function()
+    if not ESPEnabled then
+        return
+    end
+
+    local MyRoot = GetRoot()
+
+    if not MyRoot then
+        return
+    end
+
+    for Target, Data in pairs(ESPObjects) do
+        local Character = Target.Character
+        local Root = Character and Character:FindFirstChild("HumanoidRootPart")
+
+        if Root and Data.Label then
+            local Distance = math.floor(
+                (Root.Position - MyRoot.Position).Magnitude
+            )
+
+            Data.Label.Text =
+                Target.DisplayName .. " [" .. Distance .. "m]"
+        end
+    end
+end)
+
+--==================================================
+-- WORLD
+--==================================================
+
+WorldTab:Section({
+    Title = "World Settings"
+})
+
+WorldTab:Slider({
+    Title = "Gravity",
+    Value = {
+        Min = 0,
+        Max = 300,
+        Default = 196
+    },
+    Step = 1,
+    Callback = function(Value)
+        Workspace.Gravity = Value
+    end
+})
+
+WorldTab:Toggle({
+    Title = "Low Gravity",
+    Value = false,
+    Callback = function(Value)
+        if Value then
+            Workspace.Gravity = 50
+        else
+            Workspace.Gravity = 196
+        end
+    end
+})
+
+WorldTab:Slider({
+    Title = "Time",
+    Value = {
+        Min = 0,
+        Max = 24,
+        Default = 14
+    },
+    Step = 0.5,
+    Callback = function(Value)
+        Lighting.ClockTime = Value
+    end
+})
+
+--==================================================
+-- UTILITIES
+--==================================================
+
+UtilityTab:Section({
+    Title = "Server"
+})
+
+UtilityTab:Button({
+    Title = "Rejoin Server",
+    Callback = function()
+        TeleportService:Teleport(
+            game.PlaceId,
+            Player
+        )
+    end
+})
+
+local AntiAFK = false
+
+UtilityTab:Toggle({
+    Title = "Anti-AFK",
+    Value = false,
+    Callback = function(Value)
+        AntiAFK = Value
+    end
+})
+
+Player.Idled:Connect(function()
+    if AntiAFK then
+        VirtualUser:CaptureController()
+        VirtualUser:ClickButton2(Vector2.new())
+    end
+end)
+
+UtilityTab:Button({
+    Title = "Copy Job ID",
+    Callback = function()
+        if setclipboard then
+            setclipboard(game.JobId)
+        end
+
+        WindUI:Notify({
+            Title = "Job ID",
+            Content = "Job ID copied.",
+            Duration = 3
+        })
+    end
+})
+
+UtilityTab:Button({
+    Title = "Copy Place ID",
+    Callback = function()
+        if setclipboard then
+            setclipboard(tostring(game.PlaceId))
+        end
+
+        WindUI:Notify({
+            Title = "Place ID",
+            Content = "Place ID copied.",
+            Duration = 3
+        })
+    end
+})
+
+--==================================================
+-- CREDITS
+--==================================================
+
+CreditsTab:Section({
+    Title = "Credits"
+})
+
+CreditsTab:Paragraph({
+    Title = "Ravnyx",
+    Desc = "Creator and developer of Universal Script."
+})
+
+CreditsTab:Paragraph({
+    Title = "Lauriyy",
+    Desc = "Thanks to Lauriyy for allowing Ravnyx to revamp his universal scripts."
+})
+
+CreditsTab:Paragraph({
+    Title = "Efg2g Team",
+    Desc = "Universal Script project."
+})
+
+--==================================================
+-- FINISHED
+--==================================================
+
+WindUI:Notify({
+    Title = "Universal Script",
+    Content = "Loaded successfully!",
+    Duration = 5
+})
