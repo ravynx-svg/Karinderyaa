@@ -1,4 +1,3 @@
-print("EFG2G SCRIPT STARTED")
 --// Efg2g Team | Universal Script
 --// Creator: Ravnyx
 --// Credits: Lauriyy
@@ -14,10 +13,7 @@ local Workspace = game:GetService("Workspace")
 local Player = Players.LocalPlayer
 local PlayerGui = Player:WaitForChild("PlayerGui")
 
---==================================================
--- EFG2G INTRO
---==================================================
-
+--// EFG2G INTRO
 local Intro = Instance.new("ScreenGui")
 Intro.Name = "Efg2gTeam"
 Intro.ResetOnSpawn = false
@@ -55,7 +51,7 @@ local Description = Instance.new("TextLabel")
 Description.Size = UDim2.new(1, -45, 0, 80)
 Description.Position = UDim2.fromOffset(22, 65)
 Description.BackgroundTransparency = 1
-Description.Text = "Universal Script by Ravnyx"
+Description.Text = "By clicking I AGREE, you confirm that you understand and accept the terms of using Efg2g Universal Script."
 Description.TextColor3 = Color3.fromRGB(185, 185, 195)
 Description.Font = Enum.Font.Gotham
 Description.TextSize = 14
@@ -71,7 +67,6 @@ Agree.Text = "I AGREE"
 Agree.TextColor3 = Color3.fromRGB(255, 255, 255)
 Agree.Font = Enum.Font.GothamBold
 Agree.TextSize = 15
-Agree.AutoButtonColor = true
 Agree.Parent = Main
 
 local AgreeCorner = Instance.new("UICorner")
@@ -97,10 +92,7 @@ repeat
     task.wait()
 until Accepted
 
---==================================================
--- WINDUI
---==================================================
-
+--// WINDUI
 local Loaded, WindUI = pcall(function()
     return loadstring(game:HttpGet(
         "https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"
@@ -113,10 +105,6 @@ if not Loaded or not WindUI then
 end
 
 WindUI:SetNotificationLower(true)
-
---==================================================
--- WINDOW
---==================================================
 
 local Window = WindUI:CreateWindow({
     Title = "Universal Script",
@@ -131,10 +119,6 @@ local Window = WindUI:CreateWindow({
     Acrylic = true
 })
 
---==================================================
--- TABS
---==================================================
-
 local PlayerTab = Window:Tab({
     Title = "Player",
     Icon = "user"
@@ -143,6 +127,11 @@ local PlayerTab = Window:Tab({
 local FlyTab = Window:Tab({
     Title = "Fly",
     Icon = "plane"
+})
+
+local CombatTab = Window:Tab({
+    Title = "Combat",
+    Icon = "crosshair"
 })
 
 local VisualTab = Window:Tab({
@@ -165,9 +154,7 @@ local CreditsTab = Window:Tab({
     Icon = "heart"
 })
 
---==================================================
--- HELPERS
---==================================================
+--// HELPERS
 
 local function GetCharacter()
     return Player.Character
@@ -193,9 +180,7 @@ local function GetRoot()
     return Character:FindFirstChild("HumanoidRootPart")
 end
 
---==================================================
--- PLAYER TAB
---==================================================
+--// PLAYER
 
 PlayerTab:Section({
     Title = "Movement"
@@ -209,6 +194,7 @@ PlayerTab:Slider({
         Default = 16
     },
     Step = 1,
+
     Callback = function(Value)
         local Humanoid = GetHumanoid()
 
@@ -226,6 +212,7 @@ PlayerTab:Slider({
         Default = 50
     },
     Step = 1,
+
     Callback = function(Value)
         local Humanoid = GetHumanoid()
 
@@ -244,6 +231,7 @@ PlayerTab:Slider({
         Default = 2
     },
     Step = 0.5,
+
     Callback = function(Value)
         local Humanoid = GetHumanoid()
 
@@ -259,6 +247,7 @@ PlayerTab:Toggle({
     Title = "Infinite Jump",
     Desc = "Jump continuously while the jump button is pressed.",
     Value = false,
+
     Callback = function(Value)
         InfiniteJump = Value
     end
@@ -272,13 +261,11 @@ UserInputService.JumpRequest:Connect(function()
     local Humanoid = GetHumanoid()
 
     if Humanoid then
-        Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+        Humanoid:ChangeState(
+            Enum.HumanoidStateType.Jumping
+        )
     end
 end)
-
---==================================================
--- NOCLIP
---==================================================
 
 local Noclip = false
 
@@ -286,6 +273,7 @@ PlayerTab:Toggle({
     Title = "Noclip",
     Desc = "Disable character collisions.",
     Value = false,
+
     Callback = function(Value)
         Noclip = Value
     end
@@ -309,27 +297,21 @@ RunService.Stepped:Connect(function()
     end
 end)
 
---==================================================
--- SPRINT
---==================================================
-
 local SprintEnabled = false
 local SprintSpeed = 40
 
 PlayerTab:Toggle({
     Title = "Sprint",
     Value = false,
+
     Callback = function(Value)
         SprintEnabled = Value
 
         local Humanoid = GetHumanoid()
 
         if Humanoid then
-            if Value then
-                Humanoid.WalkSpeed = SprintSpeed
-            else
-                Humanoid.WalkSpeed = 16
-            end
+            Humanoid.WalkSpeed =
+                Value and SprintSpeed or 16
         end
     end
 })
@@ -342,6 +324,7 @@ PlayerTab:Slider({
         Default = 40
     },
     Step = 1,
+
     Callback = function(Value)
         SprintSpeed = Value
 
@@ -355,15 +338,12 @@ PlayerTab:Slider({
     end
 })
 
---==================================================
--- INVISIBILITY
---==================================================
-
 local SavedTransparency = {}
 
 PlayerTab:Toggle({
     Title = "Invisibility",
     Value = false,
+
     Callback = function(Value)
         local Character = GetCharacter()
 
@@ -374,14 +354,22 @@ PlayerTab:Toggle({
         if Value then
             SavedTransparency = {}
 
-            for _, Object in ipairs(Character:GetDescendants()) do
-                if Object:IsA("BasePart") or Object:IsA("Decal") then
-                    SavedTransparency[Object] = Object.Transparency
+            for _, Object in ipairs(
+                Character:GetDescendants()
+            ) do
+                if Object:IsA("BasePart")
+                    or Object:IsA("Decal") then
+
+                    SavedTransparency[Object] =
+                        Object.Transparency
+
                     Object.Transparency = 1
                 end
             end
         else
-            for Object, Transparency in pairs(SavedTransparency) do
+            for Object, Transparency in pairs(
+                SavedTransparency
+            ) do
                 if Object and Object.Parent then
                     Object.Transparency = Transparency
                 end
@@ -392,16 +380,13 @@ PlayerTab:Toggle({
     end
 })
 
---==================================================
--- CHARACTER
---==================================================
-
 PlayerTab:Section({
     Title = "Character"
 })
 
 PlayerTab:Button({
     Title = "Sit",
+
     Callback = function()
         local Humanoid = GetHumanoid()
 
@@ -413,6 +398,7 @@ PlayerTab:Button({
 
 PlayerTab:Button({
     Title = "Reset Character",
+
     Callback = function()
         local Humanoid = GetHumanoid()
 
@@ -424,14 +410,13 @@ PlayerTab:Button({
 
 PlayerTab:Button({
     Title = "Respawn",
+
     Callback = function()
         Player:LoadCharacter()
     end
 })
 
---==================================================
--- FLY
---==================================================
+--// FLY
 
 local FlyEnabled = false
 local FlySpeed = 60
@@ -470,68 +455,79 @@ local function StartFly()
     FlyEnabled = true
 
     FlyVelocity = Instance.new("BodyVelocity")
-    FlyVelocity.MaxForce = Vector3.new(
-        100000,
-        100000,
-        100000
-    )
+    FlyVelocity.MaxForce =
+        Vector3.new(100000, 100000, 100000)
+
     FlyVelocity.Velocity = Vector3.zero
     FlyVelocity.Parent = Root
 
     FlyGyro = Instance.new("BodyGyro")
-    FlyGyro.MaxTorque = Vector3.new(
-        100000,
-        100000,
-        100000
-    )
+    FlyGyro.MaxTorque =
+        Vector3.new(100000, 100000, 100000)
+
     FlyGyro.P = 90000
     FlyGyro.Parent = Root
 
-    FlyConnection = RunService.RenderStepped:Connect(function()
-        if not FlyEnabled then
-            return
+    FlyConnection = RunService.RenderStepped:Connect(
+        function()
+            if not FlyEnabled then
+                return
+            end
+
+            local CurrentRoot = GetRoot()
+            local Camera = Workspace.CurrentCamera
+
+            if not CurrentRoot or not Camera then
+                return
+            end
+
+            local Direction = Vector3.zero
+
+            if UserInputService:IsKeyDown(
+                Enum.KeyCode.W
+            ) then
+                Direction += Camera.CFrame.LookVector
+            end
+
+            if UserInputService:IsKeyDown(
+                Enum.KeyCode.S
+            ) then
+                Direction -= Camera.CFrame.LookVector
+            end
+
+            if UserInputService:IsKeyDown(
+                Enum.KeyCode.A
+            ) then
+                Direction -= Camera.CFrame.RightVector
+            end
+
+            if UserInputService:IsKeyDown(
+                Enum.KeyCode.D
+            ) then
+                Direction += Camera.CFrame.RightVector
+            end
+
+            if UserInputService:IsKeyDown(
+                Enum.KeyCode.Space
+            ) then
+                Direction += Vector3.new(0, 1, 0)
+            end
+
+            if UserInputService:IsKeyDown(
+                Enum.KeyCode.LeftControl
+            ) then
+                Direction -= Vector3.new(0, 1, 0)
+            end
+
+            if Direction.Magnitude > 0 then
+                Direction =
+                    Direction.Unit * FlySpeed
+            end
+
+            FlyVelocity.Velocity = Direction
+            FlyGyro.CFrame = Camera.CFrame
         end
-
-        local CurrentRoot = GetRoot()
-        local Camera = Workspace.CurrentCamera
-
-        if not CurrentRoot or not Camera then
-            return
-        end
-
-        local Direction = Vector3.zero
-
-        if UserInputService:IsKeyDown(Enum.KeyCode.W) then
-            Direction += Camera.CFrame.LookVector
-        end
-
-        if UserInputService:IsKeyDown(Enum.KeyCode.S) then
-            Direction -= Camera.CFrame.LookVector
-        end
-
-        if UserInputService:IsKeyDown(Enum.KeyCode.A) then
-            Direction -= Camera.CFrame.RightVector
-        end
-
-        if UserInputService:IsKeyDown(Enum.KeyCode.D) then
-            Direction += Camera.CFrame.RightVector
-        end
-
-        if UserInputService:IsKeyDown(Enum.KeyCode.Space) then
-            Direction += Vector3.new(0, 1, 0)
-        end
-
-        if UserInputService:IsKeyDown(Enum.KeyCode.LeftControl) then
-            Direction -= Vector3.new(0, 1, 0)
-        end
-
-        if Direction.Magnitude > 0 then
-            Direction = Direction.Unit * FlySpeed
-        end
-
-        FlyVelocity.Velocity = Direction
-        FlyGyro.CFrame = Camera.CFrame
-    end)
+    )
 end
 
 FlyTab:Section({
@@ -540,8 +536,9 @@ FlyTab:Section({
 
 FlyTab:Toggle({
     Title = "Fly",
-    Desc = "Desktop WASD + Space/Ctrl and mobile movement.",
+    Desc = "Desktop WASD + Space/Ctrl.",
     Value = false,
+
     Callback = function(Value)
         if Value then
             StartFly()
@@ -559,6 +556,7 @@ FlyTab:Slider({
         Default = 60
     },
     Step = 5,
+
     Callback = function(Value)
         FlySpeed = Value
     end
@@ -566,43 +564,13 @@ FlyTab:Slider({
 
 FlyTab:Button({
     Title = "Stop Flying",
+
     Callback = function()
         StopFly()
     end
-})--==================================================
--- MOBILE FLY MOVEMENT
---==================================================
+})
 
-RunService.RenderStepped:Connect(function()
-    if not FlyEnabled then
-        return
-    end
-
-    local Humanoid = GetHumanoid()
-
-    if not Humanoid or not FlyVelocity then
-        return
-    end
-
-    if Humanoid.MoveDirection.Magnitude > 0 then
-        local Direction = Humanoid.MoveDirection
-
-        local FlatDirection = Vector3.new(
-            Direction.X,
-            0,
-            Direction.Z
-        )
-
-        if FlatDirection.Magnitude > 0 then
-            FlyVelocity.Velocity =
-                FlatDirection.Unit * FlySpeed
-        end
-    end
-end)
-
---==================================================
--- SPIN / FLING MODE
---==================================================
+--// SELF SPIN
 
 local SpinEnabled = false
 local SpinSpeed = 80
@@ -619,7 +587,8 @@ local function StopSpin()
     local Root = GetRoot()
 
     if Root then
-        Root.AssemblyAngularVelocity = Vector3.zero
+        Root.AssemblyAngularVelocity =
+            Vector3.zero
     end
 end
 
@@ -634,18 +603,21 @@ local function StartSpin()
 
     SpinEnabled = true
 
-    SpinConnection = RunService.RenderStepped:Connect(function()
-        if not SpinEnabled then
-            return
-        end
+    SpinConnection =
+        RunService.RenderStepped:Connect(
+        function()
+            if not SpinEnabled then
+                return
+            end
 
-        local CurrentRoot = GetRoot()
+            local CurrentRoot = GetRoot()
 
-        if CurrentRoot then
-            CurrentRoot.AssemblyAngularVelocity =
-                Vector3.new(0, SpinSpeed, 0)
+            if CurrentRoot then
+                CurrentRoot.AssemblyAngularVelocity =
+                    Vector3.new(0, SpinSpeed, 0)
+            end
         end
-    end)
+    )
 end
 
 FlyTab:Section({
@@ -653,9 +625,10 @@ FlyTab:Section({
 })
 
 FlyTab:Toggle({
-    Title = "Spin / Fling Mode",
+    Title = "Spin Mode",
     Desc = "Rapidly spins your character.",
     Value = false,
+
     Callback = function(Value)
         if Value then
             StartSpin()
@@ -673,6 +646,7 @@ FlyTab:Slider({
         Default = 80
     },
     Step = 10,
+
     Callback = function(Value)
         SpinSpeed = Value
     end
@@ -680,35 +654,284 @@ FlyTab:Slider({
 
 FlyTab:Button({
     Title = "Stop Spinning",
+
     Callback = function()
         StopSpin()
     end
 })
 
---==================================================
--- VISUALS
---==================================================
+--// COMBAT
+-- Visual/testing controls continue in Part 2.--// COMBAT | TESTING
+
+local FOVRadius = 150
+local FOVVisible = true
+local FOVThickness = 2
+
+CombatTab:Section({
+    Title = "FOV"
+})
+
+local FOVGui = Instance.new("ScreenGui")
+FOVGui.Name = "Efg2gFOV"
+FOVGui.IgnoreGuiInset = true
+FOVGui.ResetOnSpawn = false
+FOVGui.DisplayOrder = 999
+FOVGui.Parent = PlayerGui
+
+local FOVCircle = Instance.new("Frame")
+FOVCircle.Name = "FOVCircle"
+FOVCircle.AnchorPoint = Vector2.new(0.5, 0.5)
+FOVCircle.Position = UDim2.fromScale(0.5, 0.5)
+FOVCircle.Size = UDim2.fromOffset(
+    FOVRadius * 2,
+    FOVRadius * 2
+)
+FOVCircle.BackgroundTransparency = 1
+FOVCircle.Visible = true
+FOVCircle.Parent = FOVGui
+
+local CircleCorner = Instance.new("UICorner")
+CircleCorner.CornerRadius = UDim.new(1, 0)
+CircleCorner.Parent = FOVCircle
+
+local CircleStroke = Instance.new("UIStroke")
+CircleStroke.Thickness = FOVThickness
+CircleStroke.Color = Color3.fromRGB(150, 80, 255)
+CircleStroke.Transparency = 0.1
+CircleStroke.Parent = FOVCircle
+
+CombatTab:Toggle({
+    Title = "FOV Circle",
+    Value = true,
+
+    Callback = function(Value)
+        FOVVisible = Value
+        FOVCircle.Visible = Value
+    end
+})
+
+CombatTab:Slider({
+    Title = "FOV Size",
+
+    Value = {
+        Min = 50,
+        Max = 500,
+        Default = 150
+    },
+
+    Step = 5,
+
+    Callback = function(Value)
+        FOVRadius = Value
+
+        FOVCircle.Size = UDim2.fromOffset(
+            Value * 2,
+            Value * 2
+        )
+    end
+})
+
+CombatTab:Slider({
+    Title = "FOV Thickness",
+
+    Value = {
+        Min = 1,
+        Max = 6,
+        Default = 2
+    },
+
+    Step = 1,
+
+    Callback = function(Value)
+        FOVThickness = Value
+        CircleStroke.Thickness = Value
+    end
+})
+
+--// VISUAL HITBOX TESTING
+
+local HitboxEnabled = false
+local HitboxSize = 5
+local HitboxObjects = {}
+
+local function RemoveHitbox(Target)
+    local Hitbox = HitboxObjects[Target]
+
+    if Hitbox then
+        if Hitbox.Parent then
+            Hitbox:Destroy()
+        end
+
+        HitboxObjects[Target] = nil
+    end
+end
+
+local function AddHitbox(Target)
+    if Target == Player then
+        return
+    end
+
+    local Character = Target.Character
+
+    if not Character then
+        return
+    end
+
+    local Root =
+        Character:FindFirstChild("HumanoidRootPart")
+
+    if not Root then
+        return
+    end
+
+    RemoveHitbox(Target)
+
+    local Hitbox = Instance.new("Part")
+
+    Hitbox.Name = "Efg2gTestHitbox"
+
+    Hitbox.Size = Vector3.new(
+        HitboxSize,
+        HitboxSize,
+        HitboxSize
+    )
+
+    Hitbox.Transparency = 0.75
+    Hitbox.CanCollide = false
+    Hitbox.CanTouch = false
+    Hitbox.CanQuery = false
+    Hitbox.Massless = true
+    Hitbox.Anchored = false
+
+    Hitbox.Color =
+        Color3.fromRGB(255, 80, 80)
+
+    Hitbox.Material =
+        Enum.Material.ForceField
+
+    Hitbox.CFrame = Root.CFrame
+    Hitbox.Parent = Character
+
+    local Weld = Instance.new("WeldConstraint")
+
+    Weld.Part0 = Hitbox
+    Weld.Part1 = Root
+    Weld.Parent = Hitbox
+
+    HitboxObjects[Target] = Hitbox
+end
+
+local function UpdateHitboxes()
+    if not HitboxEnabled then
+        return
+    end
+
+    for _, Target in ipairs(
+        Players:GetPlayers()
+    ) do
+        if Target ~= Player then
+            AddHitbox(Target)
+        end
+    end
+end
+
+CombatTab:Section({
+    Title = "Hitbox Testing"
+})
+
+CombatTab:Toggle({
+    Title = "Hitbox Viewer",
+    Desc = "Shows enlarged visual testing hitboxes.",
+    Value = false,
+
+    Callback = function(Value)
+        HitboxEnabled = Value
+
+        if Value then
+            UpdateHitboxes()
+        else
+            for Target in pairs(HitboxObjects) do
+                RemoveHitbox(Target)
+            end
+        end
+    end
+})
+
+CombatTab:Slider({
+    Title = "Hitbox Size",
+
+    Value = {
+        Min = 2,
+        Max = 20,
+        Default = 5
+    },
+
+    Step = 1,
+
+    Callback = function(Value)
+        HitboxSize = Value
+
+        for _, Hitbox in pairs(
+            HitboxObjects
+        ) do
+            if Hitbox and Hitbox.Parent then
+                Hitbox.Size = Vector3.new(
+                    Value,
+                    Value,
+                    Value
+                )
+            end
+        end
+    end
+})
+
+Players.PlayerAdded:Connect(function(Target)
+    Target.CharacterAdded:Connect(function()
+        task.wait(1)
+
+        if HitboxEnabled then
+            AddHitbox(Target)
+        end
+    end)
+end)
+
+Players.PlayerRemoving:Connect(function(Target)
+    RemoveHitbox(Target)
+end)
+
+--// VISUALS
 
 VisualTab:Section({
     Title = "Lighting"
 })
 
-local OriginalBrightness = Lighting.Brightness
-local OriginalClockTime = Lighting.ClockTime
-local OriginalGlobalShadows = Lighting.GlobalShadows
+local OriginalBrightness =
+    Lighting.Brightness
+
+local OriginalClockTime =
+    Lighting.ClockTime
+
+local OriginalGlobalShadows =
+    Lighting.GlobalShadows
 
 VisualTab:Toggle({
     Title = "Fullbright",
     Value = false,
+
     Callback = function(Value)
         if Value then
             Lighting.Brightness = 3
             Lighting.ClockTime = 14
             Lighting.GlobalShadows = false
         else
-            Lighting.Brightness = OriginalBrightness
-            Lighting.ClockTime = OriginalClockTime
-            Lighting.GlobalShadows = OriginalGlobalShadows
+            Lighting.Brightness =
+                OriginalBrightness
+
+            Lighting.ClockTime =
+                OriginalClockTime
+
+            Lighting.GlobalShadows =
+                OriginalGlobalShadows
         end
     end
 })
@@ -716,6 +939,7 @@ VisualTab:Toggle({
 VisualTab:Toggle({
     Title = "No Fog",
     Value = false,
+
     Callback = function(Value)
         if Value then
             Lighting.FogStart = 0
@@ -729,8 +953,11 @@ VisualTab:Toggle({
 VisualTab:Toggle({
     Title = "Remove Clouds",
     Value = false,
+
     Callback = function(Value)
-        for _, Object in ipairs(Lighting:GetChildren()) do
+        for _, Object in ipairs(
+            Lighting:GetChildren()
+        ) do
             if Object:IsA("Clouds") then
                 Object.Enabled = not Value
             end
@@ -740,14 +967,18 @@ VisualTab:Toggle({
 
 VisualTab:Slider({
     Title = "Camera FOV",
+
     Value = {
         Min = 40,
         Max = 120,
         Default = 70
     },
+
     Step = 1,
+
     Callback = function(Value)
-        local Camera = Workspace.CurrentCamera
+        local Camera =
+            Workspace.CurrentCamera
 
         if Camera then
             Camera.FieldOfView = Value
@@ -755,9 +986,7 @@ VisualTab:Slider({
     end
 })
 
---==================================================
--- ESP
---==================================================
+--// ESP
 
 local ESPEnabled = false
 local ESPObjects = {}
@@ -791,7 +1020,8 @@ local function AddESP(Target)
         return
     end
 
-    local Root = Character:FindFirstChild("HumanoidRootPart")
+    local Root =
+        Character:FindFirstChild("HumanoidRootPart")
 
     if not Root then
         return
@@ -800,24 +1030,34 @@ local function AddESP(Target)
     RemoveESP(Target)
 
     local Highlight = Instance.new("Highlight")
+
     Highlight.Name = "Efg2gESP"
     Highlight.FillTransparency = 0.65
     Highlight.OutlineTransparency = 0
     Highlight.Adornee = Character
     Highlight.Parent = Character
 
-    local Billboard = Instance.new("BillboardGui")
+    local Billboard =
+        Instance.new("BillboardGui")
+
     Billboard.Name = "Efg2gESPName"
     Billboard.Adornee = Root
-    Billboard.Size = UDim2.fromOffset(180, 45)
-    Billboard.StudsOffset = Vector3.new(0, 3, 0)
+    Billboard.Size =
+        UDim2.fromOffset(180, 45)
+
+    Billboard.StudsOffset =
+        Vector3.new(0, 3, 0)
+
     Billboard.AlwaysOnTop = true
     Billboard.Parent = Root
 
     local Label = Instance.new("TextLabel")
+
     Label.Size = UDim2.fromScale(1, 1)
     Label.BackgroundTransparency = 1
-    Label.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Label.TextColor3 =
+        Color3.fromRGB(255, 255, 255)
+
     Label.TextStrokeTransparency = 0
     Label.Font = Enum.Font.GothamBold
     Label.TextSize = 13
@@ -836,7 +1076,9 @@ local function UpdateESP()
         return
     end
 
-    for _, Target in ipairs(Players:GetPlayers()) do
+    for _, Target in ipairs(
+        Players:GetPlayers()
+    ) do
         if Target ~= Player then
             AddESP(Target)
         end
@@ -849,8 +1091,9 @@ VisualTab:Section({
 
 VisualTab:Toggle({
     Title = "ESP",
-    Desc = "Shows player names, distance and highlights.",
+    Desc = "Shows player names and highlights.",
     Value = false,
+
     Callback = function(Value)
         ESPEnabled = Value
 
@@ -888,24 +1131,36 @@ RunService.RenderStepped:Connect(function()
         return
     end
 
-    for Target, Data in pairs(ESPObjects) do
-        local Character = Target.Character
-        local Root = Character and Character:FindFirstChild("HumanoidRootPart")
+    for Target, Data in pairs(
+        ESPObjects
+    ) do
+        local Character =
+            Target.Character
+
+        local Root =
+            Character and
+            Character:FindFirstChild(
+                "HumanoidRootPart"
+            )
 
         if Root and Data.Label then
             local Distance = math.floor(
-                (Root.Position - MyRoot.Position).Magnitude
+                (
+                    Root.Position -
+                    MyRoot.Position
+                ).Magnitude
             )
 
             Data.Label.Text =
-                Target.DisplayName .. " [" .. Distance .. "m]"
+                Target.DisplayName ..
+                " [" ..
+                Distance ..
+                "m]"
         end
     end
 end)
 
---==================================================
--- WORLD
---==================================================
+--// WORLD
 
 WorldTab:Section({
     Title = "World Settings"
@@ -913,12 +1168,15 @@ WorldTab:Section({
 
 WorldTab:Slider({
     Title = "Gravity",
+
     Value = {
         Min = 0,
         Max = 300,
         Default = 196
     },
+
     Step = 1,
+
     Callback = function(Value)
         Workspace.Gravity = Value
     end
@@ -927,6 +1185,7 @@ WorldTab:Slider({
 WorldTab:Toggle({
     Title = "Low Gravity",
     Value = false,
+
     Callback = function(Value)
         if Value then
             Workspace.Gravity = 50
@@ -938,20 +1197,21 @@ WorldTab:Toggle({
 
 WorldTab:Slider({
     Title = "Time",
+
     Value = {
         Min = 0,
         Max = 24,
         Default = 14
     },
+
     Step = 0.5,
+
     Callback = function(Value)
         Lighting.ClockTime = Value
     end
 })
 
---==================================================
--- UTILITIES
---==================================================
+--// UTILITIES
 
 UtilityTab:Section({
     Title = "Server"
@@ -959,6 +1219,7 @@ UtilityTab:Section({
 
 UtilityTab:Button({
     Title = "Rejoin Server",
+
     Callback = function()
         TeleportService:Teleport(
             game.PlaceId,
@@ -972,6 +1233,7 @@ local AntiAFK = false
 UtilityTab:Toggle({
     Title = "Anti-AFK",
     Value = false,
+
     Callback = function(Value)
         AntiAFK = Value
     end
@@ -980,12 +1242,15 @@ UtilityTab:Toggle({
 Player.Idled:Connect(function()
     if AntiAFK then
         VirtualUser:CaptureController()
-        VirtualUser:ClickButton2(Vector2.new())
+        VirtualUser:ClickButton2(
+            Vector2.new()
+        )
     end
 end)
 
 UtilityTab:Button({
     Title = "Copy Job ID",
+
     Callback = function()
         if setclipboard then
             setclipboard(game.JobId)
@@ -1001,9 +1266,12 @@ UtilityTab:Button({
 
 UtilityTab:Button({
     Title = "Copy Place ID",
+
     Callback = function()
         if setclipboard then
-            setclipboard(tostring(game.PlaceId))
+            setclipboard(
+                tostring(game.PlaceId)
+            )
         end
 
         WindUI:Notify({
@@ -1014,9 +1282,7 @@ UtilityTab:Button({
     end
 })
 
---==================================================
--- CREDITS
---==================================================
+--// CREDITS
 
 CreditsTab:Section({
     Title = "Credits"
@@ -1036,10 +1302,6 @@ CreditsTab:Paragraph({
     Title = "Efg2g Team",
     Desc = "Universal Script project."
 })
-
---==================================================
--- FINISHED
---==================================================
 
 WindUI:Notify({
     Title = "Universal Script",
